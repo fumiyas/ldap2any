@@ -24,11 +24,13 @@ Requirements
 ----------------------------------------------------------------------
 
   * Perl 5.8+
+  * Perl Net::LDAP module
   * OpenLDAP 2.4 server (slapd) with syncrepl provider config
 
 TODO
 ----------------------------------------------------------------------
 
+  * Make autotoolize
   * Add support LDAP with TLS / SSL
   * Add support Sun JDS, OpenDS and Fedora DS (persistent search?)
   * Add support shadow(5) file?
