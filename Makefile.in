@@ -1,0 +1,12 @@
+SOURCE_DIR=		.
+SOURCE_BUILD=		$(SOURCE_DIR)/build
+
+## ======================================================================
+
+MAKE_DIRS=		bin lib mapper
+
+## ======================================================================
+
+include $(SOURCE_BUILD)/Makefile.common
+include $(SOURCE_BUILD)/Makefile.top
+

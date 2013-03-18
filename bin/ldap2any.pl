@@ -1,4 +1,4 @@
-#!/usr/bin/env perl
+#!@PERL_COMMAND@
 ##
 ## LDAP to ANY gateway
 ## Copyright (c) 2009-2013 SATOH Fumiyasu @ OSS Technology Corp., Japan
@@ -21,8 +21,7 @@ use warnings;
 use constant true => 1;
 use constant false => 0;
 
-use FindBin;
-use lib "$FindBin::Bin/../lib";
+use lib '@libmoduledir@/perl5';
 use LDAP2Any::Mapper;
 
 use English qw(-no_match_vars);
@@ -54,7 +53,7 @@ sub pdie_eval
 ## ======================================================================
 
 my $config_file = undef;
-my $mapper_dir = $ENV{'LDAP2ANY_MAPPER_DIR'} || "$FindBin::Bin/../mapper";
+my $mapper_dir = $ENV{'LDAP2ANY_MAPPER_DIR'} || '@libmoduledir@/mapper';
 
 my $ldap_debug_level = 0;
 my $ldap_ver = 3;

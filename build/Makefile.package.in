@@ -1,0 +1,6 @@
+## Makefile.package
+## ======================================================================
+
+PERL_COMMAND=		@PERL_COMMAND@
+PERL_LIBDIR=		@PERL_LIBDIR@
+
