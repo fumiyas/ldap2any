@@ -12,7 +12,7 @@ package LDAP2Any::Mapper;
 use strict;
 use warnings;
 
-our $MAPPER_BY_NAME = {};
+my $MAPPER_BY_NAME = {};
 
 sub Register
 {

@@ -16,48 +16,48 @@ use warnings;
 use constant true => 1;
 use constant false => 0;
 
-our $NAME = 'group';
+my $NAME = 'group';
 
 sub new
 {
-    my ($class, %opts_in) = @_;
+  my ($class, %opts_in) = @_;
 
-    my %opts = (
-      'objectclass' =>			'posixGroup',
-      ## Attribute mapping
-      'mappings' => {
-	'name' => {
-	  'index' =>		0,
-	  'attribute' =>	delete($opts_in{'name_attribute'}) || 'cn',
-	},
-	'password' => {
-	  'index' =>		1,
-	  'attribute' =>	delete($opts_in{'password_attribute'}) || 'userPassword',
-	  'default_value' =>	delete($opts_in{'password_default_value'}) || '*',
-	  'transform_value' => sub {
-	    $_[0] = ($_[0] =~ /^\{CRYPT\}(.*)$/i) ? $1 : undef;
-	  },
-	},
-	'gid' => {
-	  'index' =>		2,
-	  'attribute' =>	delete($opts_in{'gid_attribute'}) || 'gidNumber',
-	  'min_value' =>	delete($opts_in{'gid_min'}) || undef,
-	  'max_value' =>	delete($opts_in{'gid_max'}) || undef,
-	},
-	'members' => {
-	  'index' =>		3,
-	  'attribute' =>	delete($opts_in{'members_attribute'}) || 'memberUid',
-	  'default_value' =>	[],
-	  'has_many' =>	true,
-	},
+  my %opts = (
+    'objectclass' =>		'posixGroup',
+    ## Attribute mapping
+    'mappings' => {
+      'name' => {
+        'index' =>		0,
+        'attribute' =>		delete($opts_in{'name_attribute'}) || 'cn',
       },
-      ## Other options
-      'password_locked_value' =>	'!',
-    );
+      'password' => {
+        'index' =>		1,
+        'attribute' =>		delete($opts_in{'password_attribute'}) || 'userPassword',
+        'default_value' =>	delete($opts_in{'password_default_value'}) || '*',
+        'transform_value' =>	sub {
+          $_[0] = ($_[0] =~ /^\{CRYPT\}(.*)$/i) ? $1 : undef;
+        },
+      },
+      'gid' => {
+        'index' =>		2,
+        'attribute' =>		delete($opts_in{'gid_attribute'}) || 'gidNumber',
+        'min_value' =>		delete($opts_in{'gid_min'}) || undef,
+        'max_value' =>		delete($opts_in{'gid_max'}) || undef,
+      },
+      'members' => {
+        'index' =>		3,
+        'attribute' =>		delete($opts_in{'members_attribute'}) || 'memberUid',
+        'default_value' =>	[],
+        'has_many' =>	        true,
+      },
+    },
+    ## Other options
+    'password_locked_value' =>	'!',
+  );
 
-    my $self = $class->SUPER::new($NAME, %opts, %opts_in);
+  my $self = $class->SUPER::new($NAME, %opts, %opts_in);
 
-    return $self;
+  return $self;
 }
 
 LDAP2Any::Mapper->Register($NAME, __PACKAGE__);

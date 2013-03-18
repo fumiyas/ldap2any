@@ -14,7 +14,7 @@ use warnings;
 
 use base qw(Net::LDAP::Entry);
 
-our $UUIDAttribute = 'X-UUID';
+my $UUIDAttribute = 'X-UUID';
 
 sub new
 {
@@ -44,9 +44,9 @@ sub uuid
 
 sub value
 {
-    my ($self, $name) = @_;
+  my ($self, $name) = @_;
 
-    return $self->get_value($name);
+  return $self->get_value($name);
 }
 
 return 1;
