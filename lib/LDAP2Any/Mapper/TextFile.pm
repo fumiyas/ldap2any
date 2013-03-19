@@ -23,9 +23,10 @@ sub new
   my ($class, $name, %opts) = @_;
 
   %opts = (
+    'header' =>			"",
+    'footer' =>			"",
     'entry_prefix' =>		"",
     'entry_suffix' =>		"\n",
-    'entry_separator' =>	"",
     'value_separator' =>	":",
     %opts,
   );
@@ -73,16 +74,19 @@ sub commit
     || die "Cannot open file: $file_tmp: $!\n";
 
   eval {
-    $file_fh->print($self->header) ||
+    $file_fh->print($self->{'opts'}->{'header'}) ||
       die "Cannot write to file: $file_tmp: $!\n";
 
     for my $dn (sort $self->entries_dn) {
       my $entry = $self->entry_by_dn($dn);
-      $file_fh->print("$entry\n") ||
-	die "Cannot write to file: $file_tmp: $!\n";
+      $file_fh->print(
+	$self->{'opts'}->{'entry_prefix'},
+	$entry,
+	$self->{'opts'}->{'entry_suffix'}
+      ) || die "Cannot write to file: $file_tmp: $!\n";
     }
 
-    $file_fh->print($self->footer) ||
+    $file_fh->print($self->{'opts'}->{'footer'}) ||
       die "Cannot write to file: $file_tmp: $!\n";
     $file_fh->close;
 
@@ -97,16 +101,6 @@ sub commit
   }
 
   return true;
-}
-
-sub header
-{
-  return '';
-}
-
-sub footer
-{
-  return '';
 }
 
 return 1;
