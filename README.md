@@ -42,7 +42,7 @@ TODO
 
   * Make autotoolize
   * Add support LDAP with TLS / SSL
-  * Add support Sun JDS, OpenDS and Fedora DS (persistent search?)
+  * Add support Sun JSDS, OpenDS and 389 DS (persistent search?)
   * Add support shadow(5) file?
   * Lower-case username and groupname?
 
