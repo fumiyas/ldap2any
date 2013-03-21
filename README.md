@@ -40,6 +40,8 @@ Build and Installation
 TODO
 ----------------------------------------------------------------------
 
+  * Add commit-checkpoint option to reduce load by burst update
+    on LDAP server
   * Pre-/Post-exec shell command on commit
   * Normalize (lowercase, replace spaces with underscore) username
     and groupname
