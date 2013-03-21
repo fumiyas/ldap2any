@@ -51,11 +51,9 @@ sub new
         'has_many' =>	        true,
       },
     },
-    ## Other options
-    'password_locked_value' =>	delete($opts_in{'password_locked_value'}) || '!',
   );
 
-  my $self = $class->SUPER::new($NAME, %opts, %opts_in);
+  my $self = $class->SUPER::new($NAME, %opts_in, %opts);
 
   return $self;
 }

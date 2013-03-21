@@ -26,8 +26,10 @@ sub new
     'mappings' =>	delete($opts{'mappings'}) || {},
     'entry_by_ndn' =>	{}, ## Entry by a normalized DN
     'ndn_by_uuid' =>	{}, ## Normalized DN by an UUID
-    'opts' =>		\%opts,
+    'unknown_opts' =>	{},
   }, $class;
+
+  $self->unknown_options(%opts);
 
   for my $mapping (values %{$self->{'mappings'}}) {
     my $filters = $mapping->{'value_filters'} ||= [];
@@ -63,18 +65,38 @@ sub name
   return $self->{'name'};
 }
 
+sub unknown_options
+{
+  my $self = shift(@_);
+
+  if (@_ == 1) {
+    return delete($self->{'unknown_opts'}->{$_[0]});
+  }
+  elsif (@_ >= 2) {
+    $self->{'unknown_opts'} = { %{$self->{'unknown_opts'}}, @_ };
+  }
+
+  return %{$self->{'unknown_opts'}};
+}
+
+sub parse_known_option
+{
+  my ($self, $pname, $pvalue_default, $parser) = @_;
+
+  my $pvalue_raw = $self->unknown_options($pname);
+  if (!defined($pvalue_raw)) {
+    $self->{$pname} = $pvalue_default;
+    return;
+  }
+
+  $self->{$pname} = defined($parser) ? $parser->($pvalue_raw) : $pvalue_raw;
+}
+
 sub objectclass
 {
   my ($self) = @_;
 
   return $self->{'objectclass'};
-}
-
-sub opt
-{
-  my ($self, $opt_name) = @_;
-
-  return $self->{'opts'}->{$opt_name};
 }
 
 sub map

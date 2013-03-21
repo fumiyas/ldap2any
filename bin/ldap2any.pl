@@ -39,15 +39,15 @@ use Net::LDAP::Constant qw(
   LDAP_SYNC_DELETE
 );
 
-sub pdie
+sub perr
 {
   print STDOUT "$0: ERROR: $_[0]\n";
-  exit(1);
 }
 
-sub pdie_eval
+sub pdie
 {
-  die "$_[0]\n";
+  perr($_[0]);
+  exit(1);
 }
 
 ## ======================================================================
@@ -147,6 +147,13 @@ my @mapper_filters = ();
 for my $mapper_name (LDAP2Any::Mapper->Names) {
   my $mapper_options = $mapper_options{$mapper_name} || {};
   my $mapper = LDAP2Any::Mapper->create($mapper_name, %$mapper_options);
+  if (my %unknown_opts = $mapper->unknown_options) {
+    for my $pname (keys %unknown_opts) {
+      perr "Unknown option for mapper: $mapper_name: $pname";
+    }
+    exit(1);
+  }
+
   push(@mappers, $mapper);
   push(@mapper_filters, "(objectClass=".$mapper->objectclass.")");
 }

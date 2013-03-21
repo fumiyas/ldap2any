@@ -66,12 +66,12 @@ sub new
         'default_value' =>	delete($opts_in{'login_shell_default_value'}) || '/bin/false'
       },
     },
-    ## Other options
-    'password_locked_value' =>	delete($opts_in{'password_locked_value'}) || '!',
-    'password_locked_by_samba' =>delete($opts_in{'password_locked_by_samba'}) || false,
   );
 
-  my $self = $class->SUPER::new($NAME, %opts, %opts_in);
+  my $self = $class->SUPER::new($NAME, %opts_in, %opts);
+
+  $self->parse_known_option('password_locked_value', '!');
+  $self->parse_known_option('password_locked_by_samba', false);
 
   return $self;
 }

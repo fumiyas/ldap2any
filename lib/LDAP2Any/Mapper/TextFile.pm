@@ -22,16 +22,18 @@ sub new
 {
   my ($class, $name, %opts) = @_;
 
-  %opts = (
-    'header' =>			"",
-    'footer' =>			"",
-    'entry_prefix' =>		"",
-    'entry_suffix' =>		"\n",
-    'value_separator' =>	":",
-    %opts,
-  );
-
   my $self = $class->SUPER::new($name, %opts);
+
+  $self->parse_known_option('output_file', $self->name);
+  $self->parse_known_option('header', '');
+  $self->parse_known_option('footer', '');
+  $self->parse_known_option('entry_prefix', '');
+  $self->parse_known_option('entry_suffix', "\n");
+  $self->parse_known_option('value_separator', ':');
+
+  for my $mapping (values %{$self->{'mappings'}}) {
+    $mapping->{'value_separator'} = ',' unless defined($mapping->{'value_separator'});
+  }
 
   return $self;
 }
@@ -49,7 +51,7 @@ sub map
   while (my ($name, $mapping) = each(%{$self->{'mappings'}})) {
     my @value = $entry->value($name);
     my $value = ($mapping->{'has_many'})
-      ? join($mapping->{'value_separator'} || ',', @value)
+      ? join($mapping->{'value_separator'}, @value)
       : $value[0];
 
     if (defined(my $index = $mapping->{'index'})) {
@@ -60,33 +62,32 @@ sub map
     }
   }
 
-  return join($self->opt('value_separator'), @values);
+  return join($self->{'value_separator'}, @values);
 }
-
 
 sub commit
 {
   my ($self) = @_;
 
-  my $file = $self->{'opts'}->{'output_file'} || $self->name;
+  my $file = $self->{'output_file'};
   my $file_tmp = "$file.$$.l2a.tmp";
   my $file_fh = IO::File->new($file_tmp, O_CREAT|O_WRONLY, 0600)
     || die "Cannot open file: $file_tmp: $!\n";
 
   eval {
-    $file_fh->print($self->{'opts'}->{'header'}) ||
+    $file_fh->print($self->{'header'}) ||
       die "Cannot write to file: $file_tmp: $!\n";
 
     for my $dn (sort $self->entries_dn) {
       my $entry = $self->entry_by_dn($dn);
       $file_fh->print(
-	$self->{'opts'}->{'entry_prefix'},
+	$self->{'entry_prefix'},
 	$entry,
-	$self->{'opts'}->{'entry_suffix'}
+	$self->{'entry_suffix'}
       ) || die "Cannot write to file: $file_tmp: $!\n";
     }
 
-    $file_fh->print($self->{'opts'}->{'footer'}) ||
+    $file_fh->print($self->{'footer'}) ||
       die "Cannot write to file: $file_tmp: $!\n";
     $file_fh->close;
 
