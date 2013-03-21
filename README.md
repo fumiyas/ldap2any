@@ -36,6 +36,9 @@ Build and Installation
     $ sudo make install
     ...
 
+NOTE: If you use a source tree from git repository, run
+`./build/autogen.sh` before run `./configure`.
+
 TODO
 ----------------------------------------------------------------------
 
