@@ -11,7 +11,6 @@ What's this?
 
 For example, you can use this script as an LDAP to NIS gateway:
 
-    $ cd /var/yp
     # /usr/local/ldap2any/bin/ldap2any
     ...
 
@@ -40,6 +39,9 @@ Build and Installation
 TODO
 ----------------------------------------------------------------------
 
+  * Add more mapper modules:
+    * hosts(5), services(5) and so on
+    * CSV, TSV
   * Add commit-checkpoint option to reduce load by burst update
     on LDAP server
   * Pre-/Post-exec shell command on commit
@@ -48,5 +50,5 @@ TODO
   * Add support LDAP with TLS / SSL
   * Add support Sun JSDS, OpenDS and 389 DS (persistent search)
     * <http://directory.fedoraproject.org/wiki/Howto:Persistent_search>
-  * Add support shadow(5) file
+  * passwd.pm: Add support shadowAccount objectclass
 
