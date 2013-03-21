@@ -102,24 +102,24 @@ if (defined($config_file)) {
     $pname =~ s/[- ]/_/g;
 
     switch ($pname) {
-    case 'ldap_debug_level'	{ $ldap_debug_level = $pvalue; }
-    case 'ldap_timeout'		{ $timeout = $pvalue; }
-    case 'ldap_reconnect'	{ $reconnect = parse_bool($pvalue); }
-    case 'ldap_reconnect_interval'
+      case 'ldap_debug_level'	{ $ldap_debug_level = $pvalue; }
+      case 'ldap_timeout'	{ $timeout = $pvalue; }
+      case 'ldap_reconnect'	{ $reconnect = parse_bool($pvalue); }
+      case 'ldap_reconnect_interval'
 				{ $reconnect_interval = $pvalue; }
-    case 'ldap_uri'		{ $ldap_uri = $pvalue; }
-    case 'ldap_bind_dn'		{ $bind_dn = $pvalue; }
-    case 'ldap_bind_password'	{ $bind_pass = $pvalue; }
-    case 'ldap_search_base'	{ $search_base = $pvalue; }
-    case 'ldap_search_scope'	{ $search_scope = $pvalue; }
-    case 'ldap_search_filter'	{ $search_filter = $pvalue; }
-    case /^\w+:/ {
-      $pname =~ s/^(\w+?)_*:_*//;
-      $mapper_options{$1}->{$pname} = $pvalue;
-    }
-    else {
-      pdie "Unknown option in line ".$config_fh->input_line_number.": $pname";
-    }
+      case 'ldap_uri'		{ $ldap_uri = $pvalue; }
+      case 'ldap_bind_dn'	{ $bind_dn = $pvalue; }
+      case 'ldap_bind_password'	{ $bind_pass = $pvalue; }
+      case 'ldap_search_base'	{ $search_base = $pvalue; }
+      case 'ldap_search_scope'	{ $search_scope = $pvalue; }
+      case 'ldap_search_filter'	{ $search_filter = $pvalue; }
+      case /^\w+:/ {
+	$pname =~ s/^(\w+?)_*:_*//;
+	$mapper_options{$1}->{$pname} = $pvalue;
+      }
+      else {
+	pdie "Unknown option in line ".$config_fh->input_line_number.": $pname";
+      }
     }
   }
 }
@@ -247,7 +247,6 @@ my $ldap_sync_callback = sub {
 
   return unless (!$booting && %mappers_updated);
 
-  my @files_updated = ();
   for my $mapper (values %mappers_updated) {
     $mapper->commit;
   }
