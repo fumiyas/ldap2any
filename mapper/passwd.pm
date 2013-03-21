@@ -70,6 +70,7 @@ sub new
 
   my $self = $class->SUPER::new($NAME, %opts_in, %opts);
 
+  ## FIXME: Not implemented yet
   $self->parse_known_option('password_locked_value', '!');
   $self->parse_known_option('password_locked_by_samba', false);
 

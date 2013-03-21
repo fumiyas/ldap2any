@@ -6,14 +6,7 @@
 ##               <http://www.OSSTech.co.jp/>
 ##
 ## License: GNU General Public License version 3
-## Date: 2013-06-10, since 2009-08-21
-
-## NOTE: Experimental and not COMPLETED!
-
-## FIXME: Add support LDAP with TLS / SSL
-## FIXME: Add support Sun JDS, OpenDS and Fedora DS (persistent search?)
-## FIXME: Add support shadow(5) file?
-## FIXME: Lower-case username and groupname?
+## Date: 2013-03-21, since 2009-08-21
 
 use 5.008;
 use strict;
