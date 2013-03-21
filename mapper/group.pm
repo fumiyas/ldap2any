@@ -23,7 +23,7 @@ sub new
   my ($class, %opts_in) = @_;
 
   my %opts = (
-    'objectclass' =>		'posixGroup',
+    'objectclass' =>		delete($opts_in{'objectclass'}) || 'posixGroup',
     ## Attribute mapping
     'mappings' => {
       'name' => {
@@ -52,7 +52,7 @@ sub new
       },
     },
     ## Other options
-    'password_locked_value' =>	'!',
+    'password_locked_value' =>	delete($opts_in{'password_locked_value'}) || '!',
   );
 
   my $self = $class->SUPER::new($NAME, %opts, %opts_in);

@@ -54,6 +54,7 @@ sub pdie_eval
 
 my $config_file = undef;
 my $mapper_dir = $ENV{'LDAP2ANY_MAPPER_DIR'} || '@libmoduledir@/mapper';
+my %mapper_options = ();
 
 my $ldap_debug_level = 0;
 my $ldap_ver = 3;
@@ -105,20 +106,27 @@ if (defined($config_file)) {
       pdie "Invalid configuration: $line";
     }
     my $pname = $1; my $pvalue = $2;
+    $pname =~ s/[- ]/_/g;
 
     switch ($pname) {
-    case 'ldap debug level'	{ $ldap_debug_level = $pvalue; }
-    case 'ldap timeout'		{ $timeout = $pvalue; }
-    case 'ldap reconnect'	{ $reconnect = parse_bool($pvalue); }
-    case 'ldap reconnect interval'
+    case 'ldap_debug_level'	{ $ldap_debug_level = $pvalue; }
+    case 'ldap_timeout'		{ $timeout = $pvalue; }
+    case 'ldap_reconnect'	{ $reconnect = parse_bool($pvalue); }
+    case 'ldap_reconnect_interval'
 				{ $reconnect_interval = $pvalue; }
-    case 'ldap uri'		{ $ldap_uri = $pvalue; }
-    case 'ldap bind dn'		{ $bind_dn = $pvalue; }
-    case 'ldap bind password'	{ $bind_pass = $pvalue; }
-    case 'ldap search base'	{ $search_base = $pvalue; }
-    case 'ldap search scope'	{ $search_scope = $pvalue; }
-    case 'ldap search filter'	{ $search_filter = $pvalue; }
-    else { pdie "Unknown option in line ".$config_fh->input_line_number.": $pname"; }
+    case 'ldap_uri'		{ $ldap_uri = $pvalue; }
+    case 'ldap_bind_dn'		{ $bind_dn = $pvalue; }
+    case 'ldap_bind_password'	{ $bind_pass = $pvalue; }
+    case 'ldap_search_base'	{ $search_base = $pvalue; }
+    case 'ldap_search_scope'	{ $search_scope = $pvalue; }
+    case 'ldap_search_filter'	{ $search_filter = $pvalue; }
+    case /^\w+:/ {
+      $pname =~ s/^(\w+?)_*:_*//;
+      $mapper_options{$1}->{$pname} = $pvalue;
+    }
+    else {
+      pdie "Unknown option in line ".$config_fh->input_line_number.": $pname";
+    }
     }
   }
 }
@@ -137,7 +145,8 @@ for my $mapper_pm (glob("$mapper_dir/*.pm")) {
 my @mappers = ();
 my @mapper_filters = ();
 for my $mapper_name (LDAP2Any::Mapper->Names) {
-  my $mapper = LDAP2Any::Mapper->create($mapper_name);
+  my $mapper_options = $mapper_options{$mapper_name} || {};
+  my $mapper = LDAP2Any::Mapper->create($mapper_name, %$mapper_options);
   push(@mappers, $mapper);
   push(@mapper_filters, "(objectClass=".$mapper->objectclass.")");
 }

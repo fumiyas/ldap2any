@@ -68,7 +68,7 @@ sub commit
 {
   my ($self) = @_;
 
-  my $file = $self->name;
+  my $file = $self->{'opts'}->{'output_file'} || $self->name;
   my $file_tmp = "$file.$$.l2a.tmp";
   my $file_fh = IO::File->new($file_tmp, O_CREAT|O_WRONLY, 0600)
     || die "Cannot open file: $file_tmp: $!\n";

@@ -24,8 +24,8 @@ sub new
     'name' =>		$name,
     'objectclass' =>	delete($opts{'objectclass'}),
     'mappings' =>	delete($opts{'mappings'}) || {},
-    'entry_by_ndn' =>	{},
-    'ndn_by_uuid' =>	{},
+    'entry_by_ndn' =>	{}, ## Entry by a normalized DN
+    'ndn_by_uuid' =>	{}, ## Normalized DN by an UUID
     'opts' =>		\%opts,
   }, $class;
 

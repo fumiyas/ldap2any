@@ -23,12 +23,12 @@ sub new
   my ($class, %opts_in) = @_;
 
   my %opts = (
-    'objectclass' =>		'posixAccount',
+    'objectclass' =>		delete($opts_in{'objectclass'}) || 'posixAccount',
     ## Attributes
     'mappings' => {
       'name' => {
         'index' =>		0,
-        'attribute' =>		delete($opts_in{'name_attribute'}) || 'cn',
+        'attribute' =>		delete($opts_in{'name_attribute'}) || 'uid',
       },
       'password' => {
         'index' =>		1,
@@ -67,8 +67,8 @@ sub new
       },
     },
     ## Other options
-    'password_locked_value' =>	'!',
-    'password_locked_by_samba' =>false,
+    'password_locked_value' =>	delete($opts_in{'password_locked_value'}) || '!',
+    'password_locked_by_samba' =>delete($opts_in{'password_locked_by_samba'}) || false,
   );
 
   my $self = $class->SUPER::new($NAME, %opts, %opts_in);
