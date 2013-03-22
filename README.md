@@ -11,7 +11,20 @@ What's this?
 
 For example, you can use this script as an LDAP to NIS gateway:
 
-    # /usr/local/ldap2any/bin/ldap2any
+Create the following `ldap2nis.conf` file:
+
+    ldap uri = ldap://127.0.0.1/
+    #ldap bind dn = cn=ldap2any,dc=example,dc=jp
+    #ldap bind password = secret
+    ldap search base = dc=example,dc=jp
+    ldap search scope = sub
+
+    passwd: output file = /var/yp/passwd
+    group: output file = /var/yp/group
+
+Run `ldap2any` with `ldap2nis.conf`:
+
+    # /usr/local/ldap2any/bin/ldap2any -c /path/to/etc/ldap2nis.conf
     ...
 
 NOTE: Experimental and not COMPLETED!
