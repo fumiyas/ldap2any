@@ -54,7 +54,7 @@ my $ldap_ver = 3;
 my $ldap_attr_x_entryuuid = 'X-entryUUID';
 
 my $ldap_uri = 'ldap://127.0.0.1';
-my $timeout = 120;
+my $connect_timeout = 60;
 my $reconnect = true;
 my $reconnect_interval = 10;
 my $bind_dn = undef;
@@ -103,7 +103,8 @@ if (defined($config_file)) {
 
     switch ($pname) {
       case 'ldap_debug_level'	{ $ldap_debug_level = $pvalue; }
-      case 'ldap_timeout'	{ $timeout = $pvalue; }
+      case 'ldap_connect_timeout'
+				{ $connect_timeout = $pvalue; }
       case 'ldap_reconnect'	{ $reconnect = parse_bool($pvalue); }
       case 'ldap_reconnect_interval'
 				{ $reconnect_interval = $pvalue; }
@@ -260,7 +261,7 @@ while (true) {
     $ldap_uri,
     'debug' =>		$ldap_debug_level,
     'version' =>	$ldap_ver,
-    'timeout' =>	$timeout,
+    'timeout' =>	$connect_timeout,
   );
 
   unless (defined($ldap)) {
@@ -307,12 +308,12 @@ while (true) {
   $ldap->unbind;
   print "LDAP: Disconnecting: $ldap_uri\n";
   $ldap->disconnect;
-}
-continue {
+
   ## FIXME: Reset mappers
   #$booting = true;
   #...
-
+}
+continue {
   if ($reconnect_interval > 0) {
     print "LDAP: Reconnect interval: $reconnect_interval\n";
     sleep($reconnect_interval);
