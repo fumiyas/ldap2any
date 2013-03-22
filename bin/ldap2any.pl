@@ -273,7 +273,7 @@ while (true) {
 
   if (defined($bind_dn)) {
     print "LDAP: Binding: $bind_dn\n";
-    my %bind_opts = ('version' => $ldap_ver);
+    my %bind_opts = ();
     $bind_opts{'password'} = $bind_pass if (defined($bind_pass));
     my $bind_msg = $ldap->bind($bind_dn, %bind_opts);
     if ($bind_msg->code) {
@@ -303,12 +303,18 @@ while (true) {
   }
 
   print "LDAP: Search: Failed: ", $search_msg->error, "\n";
+  print "LDAP: Unbinding: $bind_dn\n";
   $ldap->unbind;
-  print "LDAP: Disconnected: $ldap_uri\n";
+  print "LDAP: Disconnecting: $ldap_uri\n";
+  $ldap->disconnect;
 }
 continue {
-  print "LDAP: Reconnect interval: $reconnect_interval\n";
+  ## FIXME: Reset mappers
+  #$booting = true;
+  #...
+
   if ($reconnect_interval > 0) {
+    print "LDAP: Reconnect interval: $reconnect_interval\n";
     sleep($reconnect_interval);
   }
 }
