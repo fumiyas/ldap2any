@@ -57,6 +57,7 @@ my $ldap_uri = 'ldap://127.0.0.1';
 my $connect_timeout = 60;
 my $reconnect = true;
 my $reconnect_interval = 10;
+my $resync_on_reconnect = false;
 my $bind_dn = undef;
 my $bind_pass = undef;
 my $search_base = '';
@@ -108,6 +109,8 @@ if (defined($config_file)) {
       case 'ldap_reconnect'	{ $reconnect = parse_bool($pvalue); }
       case 'ldap_reconnect_interval'
 				{ $reconnect_interval = $pvalue; }
+      case 'ldap_resync_on_reconnect'
+				{ $resync_on_reconnect = parse_bool($pvalue); }
       case 'ldap_uri'		{ $ldap_uri = $pvalue; }
       case 'ldap_bind_dn'	{ $bind_dn = $pvalue; }
       case 'ldap_bind_password'	{ $bind_pass = $pvalue; }
@@ -309,9 +312,13 @@ while (true) {
   print "LDAP: Disconnecting: $ldap_uri\n";
   $ldap->disconnect;
 
-  ## FIXME: Reset mappers
-  #$booting = true;
-  #...
+  if ($resync_on_reconnect) {
+    $booting = true;
+    $ldap_sync->cookie(undef);
+    for my $mapper (@mappers) {
+      $mapper->clear_entries;
+    }
+  }
 }
 continue {
   if ($reconnect_interval > 0) {

@@ -183,6 +183,14 @@ sub dn_by_uuid
   return $ndn;
 }
 
+sub clear_entries
+{
+  my ($self) = @_;
+
+  $self->{'entry_by_ndn'} = {};
+  $self->{'ndn_by_uuid'} = {};
+}
+
 sub add_entry
 {
   my ($self, $entry_in) = @_;
