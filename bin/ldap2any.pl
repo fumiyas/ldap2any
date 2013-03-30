@@ -307,7 +307,7 @@ while (true) {
   }
 
   print "LDAP: Search: Failed: ", $search_msg->error, "\n";
-  print "LDAP: Unbinding: $bind_dn\n";
+  print "LDAP: Unbinding\n";
   $ldap->unbind;
   print "LDAP: Disconnecting: $ldap_uri\n";
   $ldap->disconnect;
